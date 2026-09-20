@@ -7,7 +7,7 @@ namespace Laba1
         public double[,] xy = new double[1000, 2];
         public int n = 0;
 
-        // Початкові функції з Варіанту 4
+        // Початкові функції з Варіанту 4 
         private double f1(double x) => Math.Cos(Math.Pow(x, 3) - 4 * x + 4) / (Math.Pow(x, 3) + x + 1);
         private double f2(double x) => Math.Pow(Math.Sin(x + 2), 2) / Math.Sqrt(2 * Math.Pow(x, 2) + Math.Pow(x, 4) + 1);
         private double f3(double x) => Math.Sqrt(Math.Abs(Math.Pow(x, 3) * Math.Sin(Math.Pow(x, 3)))) / Math.Pow(Math.Cos(x + 1), 2);
