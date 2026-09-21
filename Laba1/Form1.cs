@@ -24,28 +24,50 @@ namespace Laba1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Tabul tabul = new Tabul();
-            double xn = Convert.ToDouble(textBox1.Text);
-            double xk = Convert.ToDouble(textBox2.Text);
-            double h = Convert.ToDouble(textBox3.Text);
-            double a = Convert.ToDouble(textBox4.Text);
-
-            dataGridView1.Rows.Clear();
-            chart1.Series[0].Points.Clear();
-
-            tabul.tab(xn, xk, h, a);
-
-            for (int i = 0; i < tabul.n; i++)
+            try
             {
-                dataGridView1.Rows.Add(
-                    Math.Round(tabul.xy[i, 0], 2).ToString(),
-                    Math.Round(tabul.xy[i, 1], 3).ToString()
-                );
+                double xn = Convert.ToDouble(textBox1.Text.Replace('.', ','));
+                double xk = Convert.ToDouble(textBox3.Text.Replace('.', ','));   // було textBox2
+                double h = Convert.ToDouble(textBox2.Text.Replace('.', ','));   // було textBox3
+                double a = Convert.ToDouble(textBox4.Text.Replace('.', ','));
 
-                if (!double.IsNaN(tabul.xy[i, 1]) && !double.IsInfinity(tabul.xy[i, 1]))
+                MessageBox.Show($"xn={xn}, xk={xk}, h={h}, a={a}");
+
+                if (h <= 0)
                 {
-                    chart1.Series[0].Points.AddXY(tabul.xy[i, 0], tabul.xy[i, 1]);
+                    MessageBox.Show("Крок h повинен бути більше 0!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
+
+                Tabul tabul = new Tabul();
+
+                dataGridView1.Rows.Clear();
+                chart1.Series[0].Points.Clear();
+
+                tabul.tab(xn, xk, h, a);
+
+                for (int i = 0; i < tabul.n; i++)
+                {
+                    double xVal = tabul.xy[i, 0];
+                    double yVal = tabul.xy[i, 1];
+
+                    // Перевіряємо чи значення y є коректним числом
+                    string yStr = (double.IsNaN(yVal) || double.IsInfinity(yVal))
+                                  ? "не існує"
+                                  : Math.Round(yVal, 3).ToString();
+
+                    dataGridView1.Rows.Add(Math.Round(xVal, 2).ToString(), yStr);
+
+                    // Додаємо на графік лише існуючі точки
+                    if (!double.IsNaN(yVal) && !double.IsInfinity(yVal))
+                    {
+                        chart1.Series[0].Points.AddXY(xVal, yVal);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Будь ласка, введіть коректні числові значення! Помилка: {ex.Message}", "Помилка введення", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
